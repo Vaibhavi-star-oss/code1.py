@@ -143,39 +143,3 @@ def generate_event_report(output_filename, event_data):
     # Build the PDF
     doc.build(story)
 
-# Example usage
-if __name__ == "__main__":
-    event_data = {
-        'college_name': "ABC College of Engineering",
-        'event_name': "Annual Technical Symposium 2023",
-        'event_date': "October 15-16, 2023",
-        'organizer': "Department of Computer Science",
-        'college_logo': "college_logo.png",  # Replace with actual path or remove if not available
-        'event_description': """
-            The Annual Technical Symposium is a two-day event that brings together students, 
-            faculty, and industry experts to discuss the latest trends in technology. 
-            The event featured keynote speeches, technical paper presentations, 
-            workshops, and a hackathon competition.
-        """,
-        'schedule': [
-            {'time': '09:00-10:00', 'activity': 'Registration', 'speaker': 'Organizing Team'},
-            {'time': '10:00-11:30', 'activity': 'Inauguration Ceremony', 'speaker': 'Dr. Smith, Principal'},
-            {'time': '11:45-13:00', 'activity': 'Keynote: Future of AI', 'speaker': 'Dr. Johnson, Tech Corp'},
-            {'time': '14:00-16:00', 'activity': 'Technical Paper Presentations', 'speaker': 'Various'},
-            {'time': '16:15-18:00', 'activity': 'Workshop: Cloud Computing', 'speaker': 'Prof. Williams'},
-        ],
-        'participants': {
-            'departments': ['Computer Science', 'Electronics', 'Mechanical', 'Civil'],
-            'count': 250
-        },
-        'participant_count': 250,
-        'outcomes': [
-            "15 technical papers presented",
-            "Hackathon produced 3 innovative prototypes",
-            "Networking opportunities between students and industry professionals",
-            "Increased awareness of emerging technologies"
-        ]
-    }
-    
-    generate_event_report("College_Event_Report.pdf", event_data)
-    print("PDF report generated successfully!")
