@@ -1,0 +1,117 @@
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from datetime import datetime
+
+def generate_college_event_report(output_filename, event_data):
+    # Create a document
+    doc = SimpleDocTemplate(output_filename, pagesize=letter)
+    
+    # Story will hold the content
+    story = []
+    
+    # Get default style sheet
+    styles = getSampleStyleSheet()
+    
+    # Add college logo (replace with your actual logo path)
+    try:
+        logo = Image("college_logo.png", width=2*inch, height=1*inch)
+        logo.hAlign = 'CENTER'
+        story.append(logo)
+        story.append(Spacer(1, 12))
+    except:
+        pass  # Skip if logo not found
+    
+    # Add title
+    story.append(Paragraph("COLLEGE EVENT REPORT", styles['Title']))
+    story.append(Spacer(1, 12))
+    
+    # Add event basic info
+    story.append(Paragraph(f"<b>Event Name:</b> {event_data['event_name']}", styles['Normal']))
+    story.append(Paragraph(f"<b>Date:</b> {event_data['event_date']}", styles['Normal']))
+    story.append(Paragraph(f"<b>Venue:</b> {event_data['venue']}", styles['Normal']))
+    story.append(Paragraph(f"<b>Organizing Department:</b> {event_data['department']}", styles['Normal']))
+    story.append(Paragraph(f"<b>Event Coordinator:</b> {event_data['coordinator']}", styles['Normal']))
+    story.append(Spacer(1, 24))
+    
+    # Add event description
+    story.append(Paragraph("<b>Event Description:</b>", styles['Heading3']))
+    story.append(Paragraph(event_data['description'], styles['Normal']))
+    story.append(Spacer(1, 24))
+    
+    # Add participant table
+    story.append(Paragraph("<b>Participants:</b>", styles['Heading3']))
+    
+    # Create table data
+    table_data = [["S.No", "Name", "Department", "Role"]]
+    for idx, participant in enumerate(event_data['participants'], start=1):
+        table_data.append([str(idx), participant['name'], participant['dept'], participant['role']])
+    
+    # Create table
+    participant_table = Table(table_data)
+    participant_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    story.append(participant_table)
+    story.append(Spacer(1, 24))
+    
+    # Add event highlights
+    story.append(Paragraph("<b>Event Highlights:</b>", styles['Heading3']))
+    for highlight in event_data['highlights']:
+        story.append(Paragraph(f"• {highlight}", styles['Normal']))
+    story.append(Spacer(1, 24))
+    
+    # Add outcomes
+    story.append(Paragraph("<b>Outcomes:</b>", styles['Heading3']))
+    for outcome in event_data['outcomes']:
+        story.append(Paragraph(f"• {outcome}", styles['Normal']))
+    story.append(Spacer(1, 24))
+    
+    # Add footer
+    generated_on = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    story.append(Paragraph(f"Report generated on: {generated_on}", styles['Italic']))
+    story.append(Paragraph("College Events Committee", styles['Italic']))
+    
+    # Build the document
+    doc.build(story)
+
+# Example usage
+event_data = {
+    "event_name": "Annual Tech Fest 2023",
+    "event_date": "November 15-17, 2023",
+    "venue": "College Auditorium and CS Department",
+    "department": "Computer Science",
+    "coordinator": "Dr. Smith Johnson",
+    "description": "The Annual Tech Fest is a 3-day event showcasing student projects, technical workshops, and competitions. This year's theme was 'Innovation for Sustainable Future' with over 50 projects displayed and 15 workshops conducted.",
+    "participants": [
+        {"name": "Alice Brown", "dept": "CS", "role": "Participant"},
+        {"name": "Bob Green", "dept": "IT", "role": "Workshop Lead"},
+        {"name": "Charlie White", "dept": "ECE", "role": "Volunteer"},
+        {"name": "Diana Black", "dept": "CS", "role": "Participant"},
+        {"name": "Eve Blue", "dept": "ME", "role": "Judge"},
+    ],
+    "highlights": [
+        "Keynote speech by industry leader Dr. Sarah Miller",
+        "Hackathon with 15 teams competing",
+        "Robotics demonstration workshop",
+        "AI project showcase with 20 innovative projects"
+    ],
+    "outcomes": [
+        "3 projects selected for state-level competition",
+        "Participation increased by 30% compared to last year",
+        "Positive feedback from attendees and judges",
+        "New industry partnerships established"
+    ]
+}
+
+generate_college_event_report("tech_fest_report.pdf", event_data)
+print("Event report generated successfully!")
